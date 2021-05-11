@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/customAlertNotif_editTextCoinName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:hint="Enter the coin here"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textIsSelectable="true"
+        android:text="Coin name(not symbol), e.g., ripple, chainlink, bitcoin-cash\nComplete list: https://api.coingecko.com/api/v3/coins/list"
+        />
+    <EditText
+        android:id="@+id/customAlertNotif_editTextPriceTarget"
+        android:inputType="numberDecimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:hint="Enter the price target here"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:orientation="horizontal"
+        >
+
+        <RadioButton
+            android:id="@+id/customAlertNotif_radioButtonRisesTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Price up to" />
+
+        <RadioButton
+            android:id="@+id/customAlertNotif_radioButtonDropsTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="Price down to" />
+    </RadioGroup>
+
+</LinearLayout>

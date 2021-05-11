@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lineallayout_portfolio_coins"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:background="@color/gray"
+    >
+
+        <TextView
+            android:id="@+id/portfoliorow_coinName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Bitcoin cash"
+            android:paddingHorizontal="2dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:background="#000000" />
+
+        <TextView
+            android:id="@+id/portfoliorow_owned"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingHorizontal="2dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:text="1000000.0"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+
+
+</LinearLayout>
