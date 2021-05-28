@@ -16,13 +16,7 @@ class APIhandler(private val appContext: Context) {
 
         if (coinSymbols.isEmpty())
             return ""
-/*
-        var idsString = ""
-        for (coinSymbol in coinSymbols) {
-            idsString += "%2C$coinSymbol"
-        }
 
- */
         var idsString = ""
         val length = coinSymbols.size
         for (i in 0 until length) {

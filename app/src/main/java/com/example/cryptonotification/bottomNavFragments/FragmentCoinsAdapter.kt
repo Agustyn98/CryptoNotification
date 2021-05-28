@@ -44,10 +44,10 @@ class FragmentCoinsAdapter(private val dataSet: ArrayList<DisplayCoin>) :
             builder.setMessage("Are you sure you want to delete '${viewHolder.textViewSymbol.text}'")
             builder.setPositiveButton("Yes") { dialog, which ->
                 val db = db(viewHolder.textViewSymbol.context)
-                val result : Int = db.deleteOneDisplayCoin( dataSet[position].name )
+                val result : Int = db.deleteOneDisplayCoin( dataSet[viewHolder.adapterPosition].name )
 
-                dataSet.removeAt(position)
-                notifyItemRemoved(position)
+                dataSet.removeAt(viewHolder.adapterPosition)
+                notifyItemRemoved(viewHolder.adapterPosition)
 
             }
             builder.setNegativeButton("Cancel") { dialog, which ->
@@ -70,7 +70,7 @@ class FragmentCoinsAdapter(private val dataSet: ArrayList<DisplayCoin>) :
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.textViewSymbol.text = dataSet[position].symbol
-        viewHolder.textViewPrice.text = dataSet[position].price.toString()
+        viewHolder.textViewPrice.text = dataSet[position].price.toBigDecimal().toPlainString()
 
         val change24h = dataSet[position].change24h
         viewHolder.textView24h.text = change24h.toString()

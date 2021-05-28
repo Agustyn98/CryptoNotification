@@ -58,9 +58,10 @@ class FragmentNotification : Fragment() {
         val alarmManager : AlarmManager = activity!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val timeNow = System.currentTimeMillis()
-        val startTime = timeNow + 1000 * 5
-        val intervalTime : Long = 1000 * 60 * 7
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, startTime, intervalTime,pendingIntent)
+        val startTime = timeNow + 1000 * 3
+        val intervalTime : Long = 1000 * 60 * 4
+        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, startTime, intervalTime,pendingIntent)
+        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeNow+1000*60*4, pendingIntent)
 
     }
 

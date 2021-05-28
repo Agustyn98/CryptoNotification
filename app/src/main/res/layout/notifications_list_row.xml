@@ -25,7 +25,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="4.3"
                 android:gravity="center"
-                android:padding="2dp"
+                android:padding="1dp"
                 android:text="Bitcoin-cash"
                 android:textColor="@color/white"
                 android:textSize="18sp"
@@ -40,7 +40,7 @@
                 android:padding="2dp"
                 android:text="below"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <TextView

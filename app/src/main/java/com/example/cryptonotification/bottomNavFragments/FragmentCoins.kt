@@ -125,7 +125,10 @@ class FragmentCoins : Fragment() {
                 val coinsArray = api.JSONtoCoins(response)
                 setRecyclerView(coinsArray)
             },
-            { Toast.makeText(view!!.context, "Network Error", Toast.LENGTH_LONG).show() })
+            {
+                if(view != null)
+                    Toast.makeText(view!!.context, "Network Error", Toast.LENGTH_LONG).show()
+            })
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest)

@@ -27,12 +27,17 @@ class FragmentPortfolioAdapter(private val dataSet: ArrayList<Coin>) :
         val textViewName: TextView = view.findViewById(R.id.portfoliorow_coinName)
         val textViewOwned: TextView = view.findViewById(R.id.portfoliorow_owned)
 
+        fun setT(){
+            adapterPosition
+        }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.coin_portfolio_row, viewGroup, false)
+
+
 
         return ViewHolder(view)
     }
@@ -55,16 +60,19 @@ class FragmentPortfolioAdapter(private val dataSet: ArrayList<Coin>) :
 
         })
 
+        val name = dataSet[position].name;
         holder.layout.setOnLongClickListener(View.OnLongClickListener {
 
             val builder = AlertDialog.Builder(holder.textViewName.context)
             builder.setTitle("Confirmation")
-            builder.setMessage("Delete all records from '${dataSet[position].name}' ?")
+            builder.setMessage("Delete all records from '${holder.textViewName.text}' ?")
             builder.setPositiveButton("Yes") { dialog, which ->
                 val db = db(holder.textViewName.context)
-                db.deleteOneCoinByName(dataSet[position].name)
-                dataSet.removeAt(position)
-                notifyItemRemoved(position)
+                db.deleteOneCoinByName(name)
+                dataSet.removeAt(holder.adapterPosition)
+                notifyItemChanged(holder.adapterPosition)
+                notifyItemRangeRemoved(holder.adapterPosition, 1)
+
 
             }
             builder.setNegativeButton("Cancel") { dialog, which ->
@@ -72,8 +80,7 @@ class FragmentPortfolioAdapter(private val dataSet: ArrayList<Coin>) :
             builder.show()
             true
         })
-
-
+        
     }
 
     override fun getItemCount() = dataSet.size

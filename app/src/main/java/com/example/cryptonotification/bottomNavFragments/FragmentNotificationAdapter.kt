@@ -50,13 +50,13 @@ class FragmentNotificationAdapter(private val dataSet: ArrayList<NotificationPri
 
             val builder = AlertDialog.Builder(holder.cardView.context)
             builder.setTitle("Delete notification")
-            builder.setMessage("Delete '${dataSet[position].coinName} ${holder.textViewAlertType.text} ${dataSet[position].priceTarget}' ?")
+            builder.setMessage("Delete '${holder.textViewName.text} ${holder.textViewAlertType.text} ${holder.textViewPriceTarget.text}' ?")
             builder.setPositiveButton("Yes") { dialog, which ->
                 val db = db(holder.cardView.context)
-                val result : Int = db.deleteOneNotification(dataSet[position].id)
+                val result : Int = db.deleteOneNotification(dataSet[holder.adapterPosition].id)
 
-                dataSet.removeAt(position)
-                notifyItemRemoved(position)
+                dataSet.removeAt(holder.adapterPosition)
+                notifyItemRemoved(holder.adapterPosition)
 
             }
             builder.setNegativeButton("Cancel") { dialog, which ->

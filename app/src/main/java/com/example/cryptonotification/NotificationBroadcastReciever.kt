@@ -9,7 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Log
-import android.widget.Toast
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -25,24 +25,21 @@ class NotificationBroadcastReciever : BroadcastReceiver() {
                 resetAlarm(context)
             }
         }
-        /*
-        val random = Math.random()
-        triggerNotification(NotificationPrice(coinName = "$random",priceTarget =  random, alertType =  1),context)
-        return;*/
 
-        Log.i("s", "ENTERED ON RECIEVE")
+        Log.d("NOTIFICATION", "ENTERED ON RECIEVE !")
 
         val db = db(context = context!!)
         val notificationsArray = db.getAllNotifications()
 
         if (notificationsArray.isEmpty()) {
-            Log.i("", "Array empty, no notifications, canceling alarm")
+            Log.i("NOTIFICATION", "Array empty, no notifications, canceling alarm")
             cancelAlarm(context, intent)
             return
         }
 
         for (n in notificationsArray) {
 
+            Log.d("NOTIFICATION", "checking price for ${n.coinName} ")
             var priceFromApi: Double = -1.0
             val url =
                 "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${n.coinName}"
@@ -53,57 +50,43 @@ class NotificationBroadcastReciever : BroadcastReceiver() {
                 { response ->
                     val api = APIhandler(context)
                     priceFromApi = api.JSONtoPrice(response)
-                    println("Coin ${n.coinName} has a current price of: $priceFromApi")
+                    Log.d("NOTIFICATION","Coin ${n.coinName} has a current price of: $priceFromApi")
                     if (priceFromApi <= 0)
                         return@StringRequest
 
-                    Log.i("", "Checking price for: ${n.coinName}")
+                    Log.d("NOTIFICATION", "Comparing ${n.coinName} with saved price of ${n.priceTarget}")
                     if (n.alertType == NotificationPrice.PRICE_RISES_TO) {
                         if (priceFromApi >= n.priceTarget) {
                             triggerNotification(n,context)
                             db.deleteOneNotification(n.id)
-                            Log.i("", "Price above target, deleting")
+                            Log.d("NOTIFICATION", "Price above target, deleting")
+                        }else{
+                            Log.d("NOTIFICATION", "${n.coinName} price ($priceFromApi) is not above its target (${n.priceTarget}) ")
                         }
                     } else if (n.alertType == NotificationPrice.PRICE_DROPS_TO) {
                         if (priceFromApi <= n.priceTarget) {
                             triggerNotification(n,context)
                             db.deleteOneNotification(n.id)
-                            Log.i("", "Price below target, deleting")
-
+                            Log.d("NOTIFICATION", "Price below target, deleting")
+                        }else{
+                            Log.d("NOTIFICATION", "${n.coinName} price ($priceFromApi) is not below its target (${n.priceTarget}) ")
                         }
                     }
                 },
-                { Log.e("error", "Network error, cannot access api") })
+                {
+                    Log.d("NOTIFICATION", "Network error, cannot access api")
+                    resetAlarm(context);
+                })
+            stringRequest.retryPolicy = DefaultRetryPolicy(
+                6000,
+                2,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            )
             queue.add(stringRequest)
 
         }
-
+        resetAlarm(context);
     }
-
-    /*
-    private fun checkPrice(n: NotificationPrice, priceFromApi:Double) {
-        println("Coin ${n.coinName} has a current price of: $priceFromApi")
-
-
-        Log.i("", "Checking price for: ${n.coinName}")
-        if (n.alertType == NotificationPrice.PRICE_RISES_TO) {
-            if (priceFromApi >= n.priceTarget) {
-                triggerNotification(n)
-                db.deleteOneNotification(n.id)
-                Log.i("", "Price above target, deleting")
-            }
-        } else if (n.alertType == NotificationPrice.PRICE_DROPS_TO) {
-            if (priceFromApi <= n.priceTarget) {
-                triggerNotification(n)
-                db.deleteOneNotification(n.id)
-                Log.i("", "Price below target, deleting")
-
-            }
-        }
-    }
-
-     */
-
 
     private fun buildNotification(
         context: Context?,
@@ -165,18 +148,18 @@ class NotificationBroadcastReciever : BroadcastReceiver() {
     }
 
     private fun resetAlarm(context: Context?){
-        println("Calling Alarm...")
+        Log.d("NOTIFICATION", "Starting alarm")
         //everytime you call this method, the alarm gets overwritten since its pendingIntent has the same requestCode,
         val intent = Intent(context, NotificationBroadcastReciever::class.java)
         val pendingIntent = PendingIntent.getBroadcast(context,111,intent,PendingIntent.FLAG_UPDATE_CURRENT)
 
-        if(context == null)
-            return
-        val alarmManager : AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val alarmManager : AlarmManager = context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val timenow = System.currentTimeMillis()
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, timenow+1000*30, 1000*60*2,pendingIntent)
+        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, timenow+1000*60*4, 1000*60*4,pendingIntent)
+        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timenow + 1000*60*4, pendingIntent)
     }
 
 
